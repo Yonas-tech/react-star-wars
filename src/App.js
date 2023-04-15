@@ -7,11 +7,8 @@ function App() {
 
   // useState to strore all ships' data
   const [allShipsArr, setAllShipsArr] = useState([]);
-  const [shipsArr1, setShipsArr1] = useState([]);
-  const [shipsArr2, setShipsArr2] = useState([]);
-  const [shipsArr3, setShipsArr3] = useState([]);
-  const [shipsArr4, setShipsArr4] = useState([]);
-
+  const [nextURL, setNextURL]= useState(null);
+  const [prevURL, setPrevURL]= useState(null);
 
   // API url
   const url = 'https://swapi.dev/api/starships';
@@ -19,42 +16,48 @@ function App() {
   // console.log when allShipsArr is loaded
   useEffect(() => { console.log('data:'+ allShipsArr) }, [allShipsArr])
 
-  // get apiData using the getStarshipsFromAPI(url) async function
-  const getData = async () => {
+  // get apiData using the getStarshipsFromAPI(url) 
+  const getData = async (url) => {
     // apiDataObj.keys = [count, next, previous, results]
 
-
+    // load data
     let apiData = await getStarshipsFromAPI(url) 
     setAllShipsArr([...apiData.results]) 
 
-    // let i=2;
-    //  while (apiData.next != null){   //for (i<=4; i++)  { 
-    //   let oldData = allShipsArr; 
-    //   let apiData = await getStarshipsFromAPI(url+'/?page='+i) 
-    //   console.log('Next: ' + apiData.next)  
-    //   setAllShipsArr([...oldData, ...apiData.results]) //  ???? this line is not adding the new data to allShipsArr, but replacing it
-    //   i++;
-    // }
-
+    // update URLs
+    setNextURL(apiData.next);
+    setPrevURL(apiData.previous);
   }
 
   // run getData when the page loads
   useEffect(() => {
-    getData();
+    getData(url);
   }, [])
 
+  // function for next button
+  let loadNext = function(){
+    getData(nextURL)
+  }
+
+  // function for previous button
+  let loadPrev = function(){
+    getData(prevURL)
+  }
+
+// function if data is loaded
   function loaded() {
     return (
       <div className="App">
         <div className="header"><h1>STAR WARS STARSHIPS</h1></div>
-        <div className="container">
+        <div className="buttons">
+          <button className="prev" onClick={loadPrev}>{'< Previous'}</button>
+          <button className="next" onClick={loadNext}>{"Next >"}</button>
+        </div>
+ 
+         <div className="container">
           {allShipsArr.map((ship, idx) => {
             return (
-              <StarshipCard
-                shipObj={ship}
-                key={idx}
-                id={'ship' + idx}
-              />
+              <StarshipCard shipObj={ship} key={idx} id={'ship' + idx} />
             )
           })}
         </div>
@@ -62,6 +65,7 @@ function App() {
     )
   }
 
+  // function if data is not loaded
   function loading() {
     return (<h1>Loading .... </h1>)
   }

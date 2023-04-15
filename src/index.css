@@ -42,7 +42,7 @@ code {
   width:auto;
   height: 100%;
   padding: 15px;
-  background-color: aliceblue;
+  background-color: rgb(5, 8, 11);
 }
 
 .starship {
@@ -50,6 +50,20 @@ code {
   height: 200px;
   padding: 10px;
   padding-top: 0px;
-  background-color: green;
+  background-color: rgb(138, 220, 139);
   border-radius: 30px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  font-size: 1.5em; 
+}
+
+button{
+  font-size: 1.5em; 
 }
